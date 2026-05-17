@@ -1,0 +1,15 @@
+flutter_native_splash:
+
+  color: "#121312"  ##====================================[REQUIRED]==========
+  image: assets/images/splash_logo.png
+  branding: assets/images/route.png
+  branding_bottom_padding: 24          # default 0
+
+
+
+  android_12:
+    color: "#121312"  ##====================================[REQUIRED]==========
+    image: assets/images/andro12_splash.png
+    branding: assets/images/route.png
+    branding_bottom_padding: 24          # default 0
+
