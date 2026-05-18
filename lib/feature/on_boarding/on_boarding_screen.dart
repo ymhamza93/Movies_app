@@ -30,7 +30,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: ColorManager.backgroundBlack,
       body: Stack(
         children: [
-          // 1. الخلفية (الصور بكامل الشاشة)
           PageView.builder(
             controller: _pageController,
             itemCount: pages.length,
@@ -44,8 +43,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               );
             },
           ),
-
-          // 2. التدرج اللوني (Gradient) لمنع قطع الصورة وبث روح سينمائية
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -57,39 +54,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Colors.transparent,
                   ColorManager.black.withOpacity(0.2),
                   ColorManager.black.withOpacity(0.8),
-                  ColorManager.black, // أسود صريح في القاع للقراءة
+                  ColorManager.black,
                 ],
-                stops: const [0.0, 0.4, 0.7, 1.0], // توزيع درجات التدرج
+                stops: const [0.0, 0.4, 0.7, 1.0],
               ),
             ),
           ),
-
-          // 3. المحتوى (النصوص والأزرار) عائمة فوق التدرج
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: EdgeInsets.only(
                 left: 24.w,
                 right: 24.w,
-                bottom: 34.h, // مسافة أمان مريحة من الأسفل
+                bottom: 34.h,
               ),
               child: Column(
-                mainAxisSize: MainAxisSize.min, // لجعل العمود يأخذ مساحة محتواه فقط
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // العنوان
                   Text(
                     pages[_currentIndex].title,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
-                      fontSize: 24.sp, // كبرناه سنة عشان يطابق الوزن البصري للتصميم
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
                       color: ColorManager.white,
                       height: 1.2,
                     ),
                   ),
                   SizedBox(height: 16.h),
-
-                  // الوصف
                   Text(
                     pages[_currentIndex].desc,
                     textAlign: TextAlign.center,
@@ -100,8 +92,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   SizedBox(height: 32.h),
-
-                  // زرار التحكم الرئيسي (Next / Explore Now / Finish)
                   CustomButton(
                     text: pages[_currentIndex].buttonText,
                     onPressed: () {
@@ -116,8 +106,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       }
                     },
                   ),
-
-                  // زرار الـ Back (يظهر بشكل صحيح من الشاشة الثانية فما فوق)
                   if (_currentIndex >=2) ...[
                     SizedBox(height: 12.h),
                     SizedBox(
