@@ -102,7 +102,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        // الانتقال لشاشة الـ Login
                          Navigator.pushReplacementNamed(context, RouteManager.loginScreen);
                       }
                     },

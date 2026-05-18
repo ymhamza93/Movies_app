@@ -7,7 +7,7 @@ import 'core/utils/routes_manger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // تهيئة الفايربيز
+  await Firebase.initializeApp();
 
   setupServiceLocator();
   runApp(const MoviesApp());

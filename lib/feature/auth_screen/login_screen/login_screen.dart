@@ -16,13 +16,11 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  bool isPasswordHidden = true; // متغير للتحكم في إخفاء الباسورد
-
+  bool isPasswordHidden = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 120.h,
                     fit: BoxFit.contain,
                   ),
-                  Text("Welcome Back!",
-                      style: GoogleFonts.inter(fontSize: 28.sp, fontWeight: FontWeight.bold, color: ColorManager.white)),
-                  SizedBox(height: 40.h),
+
+                  SizedBox(height: 50.h),
 
                   AppTextField(
                     hintText: "Email Address",
@@ -57,16 +54,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   AppTextField(
                     hintText: "Password",
                     prefixIcon: Icons.lock_outline,
-                    isPassword: isPasswordHidden, // بنباصي المتغير هنا
+                    isPassword: isPasswordHidden,
                     controller: passwordController,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        isPasswordHidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        isPasswordHidden
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         color: Colors.grey,
                       ),
                       onPressed: () {
                         setState(() {
-                          isPasswordHidden = !isPasswordHidden; // بيعكس الحالة لما تضغطي
+                          isPasswordHidden = !isPasswordHidden;
                         });
                       },
                     ),
@@ -75,7 +74,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 15.h),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text("Forgot Password?", style: TextStyle(color: ColorManager.yellow, fontSize: 14.sp)),
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: ColorManager.yellow,
+                        fontSize: 14.sp,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 20.h),
 
@@ -85,10 +90,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have an account? ", style: TextStyle(color: ColorManager.white)),
+                      const Text(
+                        "Don't have an account? ",
+                        style: TextStyle(color: ColorManager.white),
+                      ),
                       GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, RouteManager.loginScreen), // غيريها لـ registerScreen لاحقاً
-                        child: const Text("Create Account", style: TextStyle(color: ColorManager.yellow, fontWeight: FontWeight.bold)),
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          RouteManager.registerScreen,
+                        ), // غيريها لـ registerScreen لاحقاً
+                        child: const Text(
+                          "Create One",
+                          style: TextStyle(
+                            color: ColorManager.yellow,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -98,28 +115,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       // الخط الأيسر
                       Expanded(
                         child: Divider(
-                          color: ColorManager.yellow, // اللون الأصفر نفس صورتك الأولى
-                          thickness: 1.5,             // سمك الخط
-                          endIndent: 15.w,            // مسافة بين الخط وكلمة OR
+                          color: ColorManager.yellow,
+                          thickness: 1.5,
+                          endIndent: 15.w,
                         ),
                       ),
 
-                      // كلمة OR في المنتصف
                       Text(
                         "OR",
                         style: GoogleFonts.inter(
-                          color: ColorManager.yellow, // نفس اللون الأصفر
+                          color: ColorManager.yellow,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
 
-                      // الخط الأيمن
                       Expanded(
                         child: Divider(
                           color: ColorManager.yellow,
                           thickness: 1.5,
-                          indent: 15.w,               // مسافة بين كلمة OR والخط
+                          indent: 15.w,
                         ),
                       ),
                     ],
@@ -127,14 +142,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20.h),
                   CustomButton(
                     text: "Login With Google",
-                    onPressed: () {
-                      // هنا هينزل الـ Logic بتاع الجوجل لاحقاً
-                    },
+                    onPressed: () {},
                     icon: SvgPicture.asset(
                       "assets/images/🦆 icon _google_.svg",
                       height: 24.h,
                       width: 24.w,
-                      colorFilter: const ColorFilter.mode(ColorManager.black, BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                        ColorManager.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ],
@@ -166,7 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: CircularProgressIndicator(color: ColorManager.yellow),
           );
         }
-
         return CustomButton(
           text: "Login",
           onPressed: () {

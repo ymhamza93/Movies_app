@@ -6,7 +6,7 @@ import 'color_manager.dart';
 class AppTextField extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
-  final Widget? suffixIcon; // تعديل هنا ليستقبل أيقونة العين
+  final Widget? suffixIcon;
   final bool isPassword;
   final TextEditingController controller;
   final TextInputType? keyboardType;
@@ -25,16 +25,16 @@ class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      obscureText: isPassword, // دي اللي بتخليه مخفي نجوم
+      obscureText: isPassword,
       keyboardType: keyboardType,
       style: const TextStyle(color: ColorManager.white),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 16.sp),
         prefixIcon: Icon(prefixIcon, color: ColorManager.white),
-        suffixIcon: suffixIcon, // عرض العين هنا
+        suffixIcon: suffixIcon,
         filled: true,
-        fillColor: ColorManager.textfieldBlack, // الرمادي الغامق بتاعك
+        fillColor: ColorManager.textfieldBlack,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.r),
           borderSide: BorderSide.none,

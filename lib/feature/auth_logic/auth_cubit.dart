@@ -21,10 +21,24 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   // دالة الـ Register
-  void register({required String email, required String password}) async {
+  // دالة الـ Register المعدلة جوه الـ AuthCubit
+  void register({
+    required String email,
+    required String password,
+    required String name,
+    required String phone,
+    required String avatarPath,
+  }) async {
     emit(AuthLoading());
     try {
-      await _authService.signUpWithEmail(email: email, password: password);
+      await _authService.signUpWithEmail(
+        email: email,
+        password: password,
+        name: name,
+        phone: phone,
+        avatarPath: avatarPath,
+      );
+
       emit(AuthSuccess());
     } catch (e) {
       emit(AuthError(e.toString().replaceAll("Exception: ", "")));
