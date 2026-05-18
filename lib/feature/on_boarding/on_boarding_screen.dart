@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
+import 'package:movies_app/core/utils/routes_manger.dart';
 import '../../core/utils/custom_button.dart';
 import 'onboarding_data.dart';
 
@@ -102,7 +103,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                       } else {
                         // الانتقال لشاشة الـ Login
-                        // Navigator.pushReplacementNamed(context, RoutesManager.loginScreen);
+                         Navigator.pushReplacementNamed(context, RouteManager.loginScreen);
                       }
                     },
                   ),
