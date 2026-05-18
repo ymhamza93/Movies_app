@@ -15,7 +15,6 @@ abstract class RouteManager {
   static Map<String, WidgetBuilder> routes = {
     onboardingScreen: (_) => const OnboardingScreen(),
 
-    // هنا بنسحب الـ Cubit سحراً من الـ getIt ونعطيه للشاشة قبل ما تفتح
     loginScreen: (_) =>
         BlocProvider(
           create: (context) => getIt<AuthCubit>(),

@@ -21,8 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  bool isPasswordHidden = true; // متغير للتحكم في إخفاء الباسورد
-
+  bool isPasswordHidden = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   AppTextField(
                     hintText: "Password",
                     prefixIcon: Icons.lock_outline,
-                    isPassword: isPasswordHidden, // بنباصي المتغير هنا
+                    isPassword: isPasswordHidden,
                     controller: passwordController,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          isPasswordHidden = !isPasswordHidden; // بيعكس الحالة لما تضغطي
+                          isPasswordHidden = !isPasswordHidden; //
                         });
                       },
                     ),
@@ -95,31 +94,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20.h),
                   Row(
                     children: [
-                      // الخط الأيسر
-                      Expanded(
-                        child: Divider(
-                          color: ColorManager.yellow, // اللون الأصفر نفس صورتك الأولى
-                          thickness: 1.5,             // سمك الخط
-                          endIndent: 15.w,            // مسافة بين الخط وكلمة OR
-                        ),
-                      ),
 
-                      // كلمة OR في المنتصف
-                      Text(
-                        "OR",
-                        style: GoogleFonts.inter(
-                          color: ColorManager.yellow, // نفس اللون الأصفر
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      // الخط الأيمن
                       Expanded(
                         child: Divider(
                           color: ColorManager.yellow,
                           thickness: 1.5,
-                          indent: 15.w,               // مسافة بين كلمة OR والخط
+                          endIndent: 15.w,
+                        ),
+                      ),
+                      Text(
+                        "OR",
+                        style: GoogleFonts.inter(
+                          color: ColorManager.yellow,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: ColorManager.yellow,
+                          thickness: 1.5,
+                          indent: 15.w,
                         ),
                       ),
                     ],

@@ -8,7 +8,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color? backgroundColor;
   final Color? textColor;
-  final Widget? icon; // 1. ضفنا متغير اختياري للأيقونة هنا
+  final Widget? icon;
 
   const CustomButton({
     super.key,
@@ -16,7 +16,7 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.backgroundColor,
     this.textColor,
-    this.icon, // 2. مررناه في الـ Constructor
+    this.icon,
   });
 
   @override
@@ -33,12 +33,11 @@ class CustomButton extends StatelessWidget {
           elevation: 0,
         ),
         onPressed: onPressed,
-        // 3. عمالنا شرط: لو في أيقونة، يعرض الـ Row، لو مفيش يعرض النص لوحده
         child: icon != null
             ? Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon!, // الأيقونة (زي لوجو جوجل)
+            icon!,
             SizedBox(width: 12.w),
             Text(
               text,
