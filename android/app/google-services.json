@@ -12,7 +12,20 @@
           "package_name": "com.example.movies_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "400951935522-vvhe5hl4tv9irqi7ttj0rjm1dn3ee0va.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movies_app",
+            "certificate_hash": "80f8bfa35d3a28e678b0054248d6d9b6aac46b0a"
+          }
+        },
+        {
+          "client_id": "400951935522-5dt8l6ebgnoo9eft5bt3dr7ehh7p98on.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB26ds8vlgVIY66PpTIi7PKDLtBt_Gf1p4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400951935522-5dt8l6ebgnoo9eft5bt3dr7ehh7p98on.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

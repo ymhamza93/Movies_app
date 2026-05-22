@@ -6,10 +6,12 @@ import 'package:movies_app/core/utils/app_text_field.dart';
 import 'package:movies_app/core/utils/assets_manager.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
 import 'package:movies_app/core/utils/custom_button.dart';
+import 'package:movies_app/core/utils/language_animated_switch.dart';
 import 'package:movies_app/core/utils/routes_manger.dart';
 import 'package:movies_app/feature/auth_logic/auth_cubit.dart';
 import 'package:movies_app/feature/auth_logic/auth_state.dart';
 import 'package:movies_app/feature/auth_screen/register_screen/avatar_carousel.dart';
+import 'package:movies_app/l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -28,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isPasswordHidden = true;
   bool isConfirmPasswordHidden = true;
+
 
   final List<String> avatars = [
     AssetsManager.avatar1,
@@ -52,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Register",
+          AppLocalizations.of(context)!.register,
           style: GoogleFonts.inter(
             color: ColorManager.yellow,
             fontSize: 20.sp,
@@ -83,20 +86,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   SizedBox(height: 25.h),
                   AppTextField(
-                    hintText: "Name",
+                    hintText:AppLocalizations.of(context)!.name,
                     prefixIcon: Icons.badge_outlined,
                     controller: nameController,
                   ),
                   SizedBox(height: 16.h),
                   AppTextField(
-                    hintText: "Email",
+                    hintText: AppLocalizations.of(context)!.email,
                     prefixIcon: Icons.email_outlined,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 16.h),
                   AppTextField(
-                    hintText: "Password",
+                    hintText: AppLocalizations.of(context)!.password,
                     prefixIcon: Icons.lock_outline,
                     isPassword: isPasswordHidden,
                     controller: passwordController,
@@ -113,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   SizedBox(height: 16.h),
                   AppTextField(
-                    hintText: "Confirm Password",
+                    hintText: AppLocalizations.of(context)!.confirm_password,
                     prefixIcon: Icons.lock_outline,
                     isPassword: isConfirmPasswordHidden,
                     controller: confirmPasswordController,
@@ -132,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   SizedBox(height: 16.h),
                   AppTextField(
-                    hintText: "Phone Number",
+                    hintText: AppLocalizations.of(context)!.phone_number,
                     prefixIcon: Icons.phone,
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
@@ -146,14 +149,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Already Have Account ? ",
+                       Text(
+                      AppLocalizations.of(context)!.already_have_account  ,
                         style: TextStyle(color: ColorManager.white),
                       ),
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
-                        child: const Text(
-                          "Login",
+                        child:  Text(
+                         AppLocalizations.of(context)!.login,
                           style: TextStyle(
                             color: ColorManager.yellow,
                             fontWeight: FontWeight.bold,
@@ -162,7 +165,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
+                  const SizedBox(height: 24),
+
+                  const Center(
+                    child: LanguageAnimatedSwitch(),
+                  ),
+
+                  const SizedBox(height: 24),
+
                 ],
               ),
             ),
@@ -194,7 +204,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
 
         return CustomButton(
-          text: "Create Account",
+          text: AppLocalizations.of(context)!.create_account,
           onPressed: () {
             if (formKey.currentState!.validate()) {
               if (passwordController.text != confirmPasswordController.text) {

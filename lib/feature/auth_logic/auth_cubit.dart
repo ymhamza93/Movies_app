@@ -1,15 +1,35 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/feature/auth_logic/data/firebase_auth_service.dart';
 
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  // بنمرر الخدمة في الـ Constructor عشان نحقق الـ Dependency Injection صح
   final FirebaseAuthService _authService;
 
   AuthCubit(this._authService) : super(AuthInitial());
 
-  // دالة الـ Login
+  void getUserProfile() async {
+    emit(AuthLoading());
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        final snapshot = await _authService.getUserData(currentUser.uid);
+
+        if (snapshot.exists && snapshot.data() != null) {
+          emit(ProfileLoaded(snapshot.data()!));
+        } else {
+          emit(AuthError("User data does not exist in database."));
+        }
+      } else {
+        emit(AuthError("No user currently logged in."));
+      }
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll("Exception: ", "")));
+    }
+  }
+
   void login({required String email, required String password}) async {
     emit(AuthLoading());
     try {
@@ -20,8 +40,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  // دالة الـ Register
-  // دالة الـ Register المعدلة جوه الـ AuthCubit
   void register({
     required String email,
     required String password,
@@ -42,6 +60,46 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthSuccess());
     } catch (e) {
       emit(AuthError(e.toString().replaceAll("Exception: ", "")));
+    }
+  }
+
+  Future<void> resetPassword({required String email}) async {
+    emit(AuthLoading());
+    try {
+      await _authService.sendPasswordResetEmail(email: email);
+      emit(AuthSuccess());
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll("Exception: ", "")));
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await _authService.signOut();
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<UserCredential?> loginWithGoogleInCubit() async {
+    emit(AuthLoading());
+    try {
+      final userCredential = await _authService.signInWithGoogle();
+
+      if (userCredential != null) {
+        emit(AuthSuccess());
+        return userCredential;
+      } else {
+        throw "Sign-in canceled by user";
+      }
+    } catch (e) {
+      if (e.toString().contains("canceled") || e.toString().contains("16")) {
+        emit(AuthInitial());
+      } else {
+        emit(AuthError(e.toString().replaceAll("Exception: ", "")));
+      }
+      return null;
     }
   }
 }

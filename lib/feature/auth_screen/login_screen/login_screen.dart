@@ -6,9 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/core/utils/app_text_field.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
 import 'package:movies_app/core/utils/custom_button.dart';
+import 'package:movies_app/core/utils/language_animated_switch.dart';
 import 'package:movies_app/core/utils/routes_manger.dart';
 import 'package:movies_app/feature/auth_logic/auth_cubit.dart';
 import 'package:movies_app/feature/auth_logic/auth_state.dart';
+import 'package:movies_app/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,11 +18,15 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
+
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isPasswordHidden = true;
+
+  bool isGoogleClick = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,11 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 120.h,
                     fit: BoxFit.contain,
                   ),
-
                   SizedBox(height: 50.h),
 
                   AppTextField(
-                    hintText: "Email Address",
+                    hintText: AppLocalizations.of(context)!.email,
                     prefixIcon: Icons.email_outlined,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -52,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20.h),
 
                   AppTextField(
-                    hintText: "Password",
+                    hintText: AppLocalizations.of(context)!.password,
                     prefixIcon: Icons.lock_outline,
                     isPassword: isPasswordHidden,
                     controller: passwordController,
@@ -74,11 +79,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 15.h),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: ColorManager.yellow,
-                        fontSize: 14.sp,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RouteManager.forgetPasswordScreen,
+                        );
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.forget_password,
+                        style: TextStyle(
+                          color: ColorManager.yellow,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                   ),
@@ -90,17 +103,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Don't have an account? ",
+                      Text(
+                        AppLocalizations.of(context)!.dont_have_account,
                         style: TextStyle(color: ColorManager.white),
                       ),
                       GestureDetector(
                         onTap: () => Navigator.pushNamed(
                           context,
                           RouteManager.registerScreen,
-                        ), // غيريها لـ registerScreen لاحقاً
-                        child: const Text(
-                          "Create One",
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.create_one,
                           style: TextStyle(
                             color: ColorManager.yellow,
                             fontWeight: FontWeight.bold,
@@ -112,7 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20.h),
                   Row(
                     children: [
-                      // الخط الأيسر
                       Expanded(
                         child: Divider(
                           color: ColorManager.yellow,
@@ -120,16 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           endIndent: 15.w,
                         ),
                       ),
-
                       Text(
-                        "OR",
+                        AppLocalizations.of(context)!.or,
                         style: GoogleFonts.inter(
                           color: ColorManager.yellow,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       Expanded(
                         child: Divider(
                           color: ColorManager.yellow,
@@ -140,19 +150,93 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   SizedBox(height: 20.h),
-                  CustomButton(
-                    text: "Login With Google",
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      "assets/images/🦆 icon _google_.svg",
-                      height: 24.h,
-                      width: 24.w,
-                      colorFilter: const ColorFilter.mode(
-                        ColorManager.black,
-                        BlendMode.srcIn,
-                      ),
-                    ),
+
+                  BlocConsumer<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthSuccess) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          RouteManager.homeScreen,
+                          (route) => false,
+                        );
+                      }
+                      if (state is AuthError) {
+                        setState(() {
+                          isGoogleClick = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Google Sign-In failed: ${state.message}",
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+
+                      if (state is AuthInitial) {
+                        setState(() {
+                          isGoogleClick = false;
+                        });
+                      }
+                    },
+                    builder: (context, state) {
+                      bool isGoogleLoading =
+                          state is AuthLoading && isGoogleClick;
+
+                      if (isGoogleLoading) {
+                        return SizedBox(
+                          height: 55.h,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: ColorManager.yellow,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            isGoogleClick = true;
+                          });
+                          context.read<AuthCubit>().loginWithGoogleInCubit();
+                        },
+                        child: Container(
+                          height: 55.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: ColorManager.yellow,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/images/🦆 icon _google_.svg",
+                                height: 24.h,
+                                width: 24.w,
+                              ),
+                              SizedBox(width: 10.w),
+                              Text(
+                                AppLocalizations.of(context)!.login_with_google,
+                                style: GoogleFonts.inter(
+                                  color: ColorManager.black,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
+                  const SizedBox(height: 24),
+
+                  const Center(child: LanguageAnimatedSwitch()),
+
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
@@ -177,14 +261,19 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       builder: (context, state) {
-        if (state is AuthLoading) {
+        bool isEmailLoading = state is AuthLoading && !isGoogleClick;
+
+        if (isEmailLoading) {
           return const Center(
             child: CircularProgressIndicator(color: ColorManager.yellow),
           );
         }
         return CustomButton(
-          text: "Login",
+          text: AppLocalizations.of(context)!.login,
           onPressed: () {
+            setState(() {
+              isGoogleClick = false;
+            });
             if (formKey.currentState!.validate()) {
               context.read<AuthCubit>().login(
                 email: emailController.text.trim(),
