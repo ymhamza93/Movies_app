@@ -4,6 +4,7 @@ import 'package:movies_app/core/di/service_locator.dart';
 import 'package:movies_app/feature/auth_logic/auth_cubit.dart';
 import 'package:movies_app/feature/auth_screen/login_screen/login_screen.dart';
 import 'package:movies_app/feature/auth_screen/register_screen/register_screen.dart';
+import 'package:movies_app/feature/home_screen/home_screen.dart';
 //import 'package:movies_app/feature/home_screen/home_screen.dart';
 //import 'package:movies_app/feature/profile/profile_screen.dart';
 import '../../feature/on_boarding/on_boarding_screen.dart';
@@ -37,6 +38,6 @@ abstract class RouteManager {
    //    create: (context) => getIt<AuthCubit>(),
    //    child: const ProfileScreen(),
    //  ),
+    homeScreen: (_) => const HomeScreen(),
   };
-
 }

@@ -16,4 +16,15 @@ abstract class AssetsManager {
   static const String avatar7 = "${_basePath}avatar7.png";
   static const String avatar8 = "${_basePath}avatar8.png";
   static const String avatar9 = "${_basePath}avatar9.png";
+  static const String availableNow = "${_basePath}Available Now.png";
+  static const String watchNow = "${_basePath}Watch Now.png";
+  static const String playIcon = "${_basePath}play_icon.png";
+  static const String searchEmpty = "${_basePath}searchEmpty.png";
+}
+abstract class IconManager {
+  static const String _basePath = "assets/images/";
+  static const String homeIcon = "${_basePath}home_icon.png";
+  static const String searchIcon = "${_basePath}search_icon.png";
+  static const String browserIcon = "${_basePath}browser_icon.png";
+  static const String profileIcon = "${_basePath}profiel_icon.png";
 }

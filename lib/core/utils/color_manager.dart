@@ -7,4 +7,5 @@ abstract class ColorManager {
   static const Color black = Color(0xFF121312);
   static const Color white = Color(0xFFFFFFFF);
   static const Color orange = Color(0xFFE82626);
+  static const Color backgroundNavigationBar = Color(0xFF282A28);
 }
