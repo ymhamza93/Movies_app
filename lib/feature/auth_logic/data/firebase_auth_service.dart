@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -20,7 +19,7 @@ class FirebaseAuthService {
     required String password,
   }) async {
     try {
-      return await _auth.signInWithEmailAndPassword(
+      return await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -37,7 +36,7 @@ class FirebaseAuthService {
     required String avatarPath,
   }) async {
     try {
-      UserCredential userCredential = await _auth
+      UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
@@ -56,7 +55,11 @@ class FirebaseAuthService {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      throw Exception("Failed to sign out: ${e.toString()}");
+    }
   }
 
   Future<void> sendPasswordResetEmail({required String email}) async {
@@ -84,9 +87,42 @@ class FirebaseAuthService {
         accessToken: googleAuth.idToken,
         idToken: googleAuth.idToken,
       );
-      return await _auth.signInWithCredential(credential);
+      return await _firebaseAuth.signInWithCredential(credential);
     } catch (e) {
       throw Exception('Google Sign-In failed: $e');
+    }
+  }
+
+  Future<void> updateUserData({
+    required String uid,
+    required String name,
+    required String phone,
+    required String avatarPath,
+  }) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'name': name,
+        'phone': phone,
+        'avatarPath': avatarPath,
+      });
+    } catch (e) {
+      throw Exception("Failed to update user data: $e");
+    }
+  }
+
+  Future<void> deleteUserAccount() async {
+    try {
+      final user = _firebaseAuth.currentUser;
+
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).delete();
+
+        await user.delete();
+      } else {
+        throw Exception("No user currently logged in.");
+      }
+    } catch (e) {
+      throw Exception("Failed to delete account: ${e.toString()}");
     }
   }
 }

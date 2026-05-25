@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/feature/auth_logic/data/firebase_auth_service.dart';
-
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -100,6 +99,58 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthError(e.toString().replaceAll("Exception: ", "")));
       }
       return null;
+    }
+  }
+
+  Future<void> updateProfile({
+    required String name,
+    required String phone,
+    required String avatarPath,
+  }) async {
+    emit(AuthLoading());
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        await _authService.updateUserData(
+          uid: currentUser.uid,
+          name: name,
+          phone: phone,
+          avatarPath: avatarPath,
+        );
+
+        final snapshot = await _authService.getUserData(currentUser.uid);
+
+        if (snapshot.exists && snapshot.data() != null) {
+          emit(ProfileLoaded(snapshot.data()!));
+        } else {
+          emit(AuthError("Failed to fetch updated data."));
+        }
+      } else {
+        emit(AuthError("No user currently logged in."));
+      }
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll("Exception: ", "")));
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    emit(AuthLoading());
+    try {
+      await _authService.deleteUserAccount();
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll("Exception: ", "")));
+    }
+  }
+
+  Future<void> logout() async {
+    emit(AuthLoading());
+    try {
+      await _authService.signOut();
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll("Exception: ", "")));
     }
   }
 }

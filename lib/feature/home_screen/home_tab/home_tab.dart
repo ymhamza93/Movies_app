@@ -1,12 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/core/utils/assets_manager.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
+import 'package:movies_app/core/utils/routes_manger.dart';
 import 'package:movies_app/feature/home_screen/home_tab/widgets/movie_card.dart';
 import 'package:movies_app/feature/home_screen/home_tab/widgets/movie_carousel.dart';
 import 'package:movies_app/feature/home_screen/data/api/movie_api_service.dart';
 import 'package:movies_app/feature/home_screen/data/model/movie_model.dart';
+import 'package:movies_app/feature/home_screen/profile_tab/history_list/history_cubit.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -15,11 +18,11 @@ class HomeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        //الصورة نفسها
+
         Positioned.fill(
           child: Image.asset(AssetsManager.onboarding6, fit: BoxFit.fill),
         ),
-        // الطبقة الضبابية
+
         Positioned.fill(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -27,7 +30,6 @@ class HomeTab extends StatelessWidget {
           ),
         ),
 
-        //الاسود الى تحت في الباك جراوند
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -98,11 +100,29 @@ class HomeTab extends StatelessWidget {
 
                     child: ListView.builder(
                       itemCount: movies.length,
-
                       scrollDirection: Axis.horizontal,
-
                       itemBuilder: (context, index) {
-                        return MovieCard(movie: movies[index]);
+                        final currentMovie = movies[index];
+
+                        return GestureDetector(
+                          onTap: () {
+
+
+                            context.read<HistoryCubit>().addMovieToHistory({
+                              'id': currentMovie.id?.toString() ?? '',
+                              'poster': currentMovie.image ?? '',
+                              'rating': currentMovie.rating?.toString() ?? '0.0',
+                            });
+
+
+                            Navigator.pushNamed(
+                              context,
+                              RouteManager.movieDetailsScreen,
+                              arguments: currentMovie,
+                            );
+                          },
+                          child: MovieCard(movie: currentMovie),
+                        );
                       },
                     ),
                   );

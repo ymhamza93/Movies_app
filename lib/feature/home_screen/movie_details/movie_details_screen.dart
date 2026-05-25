@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/core/utils/assets_manager.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
 import 'package:movies_app/feature/home_screen/data/api/movie_api_service.dart';
@@ -9,6 +10,8 @@ import 'package:movies_app/feature/home_screen/movie_details/widgets/screen_shot
 import 'package:movies_app/feature/home_screen/data/model/movie_model.dart';
 import 'package:movies_app/feature/home_screen/movie_details/widgets/similar_section.dart';
 import 'package:movies_app/feature/home_screen/movie_details/widgets/summary_section.dart';
+import 'package:movies_app/feature/home_screen/profile_tab/history_list/history_cubit.dart';
+import 'package:movies_app/feature/home_screen/profile_tab/watch_list/watchlist_button.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final MovieModel movie;
@@ -17,10 +20,14 @@ class MovieDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MovieApiService.getMovieDetails(movie.id).then((value) {
-      print(value);
+    // MovieApiService.getMovieDetails(movie.id).then((value) {
+    //   print(value);
+    // });
+    context.read<HistoryCubit>().addMovieToHistory({
+      'id': movie.id.toString(),
+      'poster': movie.image,
+      'rating': movie.rating.toString(),
     });
-
     return FutureBuilder<Map<String, dynamic>>(
       future: MovieApiService.getMovieDetails(movie.id),
       builder: (context, snapshot) {
@@ -36,7 +43,7 @@ class MovieDetailsScreen extends StatelessWidget {
               child: Image.network(movie.image, fit: BoxFit.cover),
             ),
 
-            //الاسود الى تحت في الباك جراوند
+
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
@@ -74,15 +81,7 @@ class MovieDetailsScreen extends StatelessWidget {
                             ),
                           ),
 
-                          IconButton(
-                            onPressed: () {},
-
-                            icon: Icon(
-                              Icons.bookmark,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
+                          WatchlistButton(movie: movie),
                         ],
                       ),
                       SizedBox(

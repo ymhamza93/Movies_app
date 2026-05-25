@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/di/service_locator.dart';
 import 'package:movies_app/feature/auth_logic/locale_cubit.dart';
+import 'package:movies_app/feature/home_screen/profile_tab/history_list/history_cubit.dart';
+import 'package:movies_app/feature/home_screen/profile_tab/watch_list/watchlist_cubit.dart';
 import 'package:movies_app/l10n/app_localizations.dart';
 
 import 'core/utils/routes_manger.dart';
@@ -21,8 +23,16 @@ class MoviesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LocaleCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LocaleCubit()),
+        BlocProvider(
+          create: (context) => getIt<WatchlistCubit>()..fetchWatchlist(),
+        ),
+
+        BlocProvider(create: (context) => HistoryCubit()),
+      ],
+
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, currentLocale) {
           return ScreenUtilInit(
@@ -37,7 +47,7 @@ class MoviesApp extends StatelessWidget {
 
                 locale: currentLocale,
 
-                initialRoute: RouteManager.onboardingScreen,
+                initialRoute: RouteManager.homeScreen,
                 routes: RouteManager.routes,
               );
             },
