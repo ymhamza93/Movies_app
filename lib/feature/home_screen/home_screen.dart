@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // 🌟 جعلنا الكيوبيت متاحاً فوق الشاشة الرئيسية بالكامل لتراه كل التابات
+
         BlocProvider(
           create: (context) => getIt<WatchlistCubit>()..fetchWatchlist(),
         ),

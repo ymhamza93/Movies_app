@@ -24,7 +24,9 @@ class _WatchlistButtonState extends State<WatchlistButton> {
 
   Future<void> _checkInitialWatchlistStatus() async {
     final movieId = widget.movie.id.toString();
-    final status = await context.read<WatchlistCubit>().checkMovieStatus(movieId);
+    final status = await context.read<WatchlistCubit>().checkMovieStatus(
+      movieId,
+    );
     if (mounted) {
       setState(() {
         isFavorite = status;
@@ -34,29 +36,23 @@ class _WatchlistButtonState extends State<WatchlistButton> {
 
   @override
   Widget build(BuildContext context) {
-    // 🌟 استخدمنا BlocConsumer هنا عشان نراقب الكيوبيت رايح فين وجاي منين
     return BlocConsumer<WatchlistCubit, WatchlistState>(
       listener: (context, state) {
         if (state is WatchlistSuccess) {
-          print("🔄 [WatchlistButton] Cubit Success! Total movies now: ${state.movies.length}");
-          _checkInitialWatchlistStatus(); // إعادة فحص الحالة لتحديث شكل الأيقونة فوراً
+          _checkInitialWatchlistStatus();
         }
-        if (state is WatchlistError) {
-          print("❌ [WatchlistButton] Cubit Error: ${state.message}");
-        }
+        if (state is WatchlistError) {}
       },
       builder: (context, state) {
         return IconButton(
           onPressed: () async {
             final movieId = widget.movie.id.toString();
-            print("🎯 [WatchlistButton] Clicked! Current favorite status: $isFavorite");
 
             setState(() {
               isFavorite = !isFavorite;
             });
 
             if (isFavorite) {
-              print("⏳ [WatchlistButton] Sending Add Request for Movie: ${widget.movie.title}");
               await context.read<WatchlistCubit>().addMovie(movieId, {
                 'id': movieId,
                 'title': widget.movie.title,
@@ -73,7 +69,6 @@ class _WatchlistButtonState extends State<WatchlistButton> {
                 );
               }
             } else {
-              print("⏳ [WatchlistButton] Sending Remove Request for Movie ID: $movieId");
               await context.read<WatchlistCubit>().removeMovie(movieId);
 
               if (mounted) {

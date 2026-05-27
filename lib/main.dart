@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/di/service_locator.dart';
+import 'package:movies_app/core/utils/preference_manager.dart';
 import 'package:movies_app/feature/auth_logic/locale_cubit.dart';
 import 'package:movies_app/feature/home_screen/profile_tab/history_list/history_cubit.dart';
 import 'package:movies_app/feature/home_screen/profile_tab/watch_list/watchlist_cubit.dart';
@@ -13,13 +14,25 @@ import 'core/utils/routes_manger.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await PreferenceManager.init();
+
+  bool isFirstTime = PreferenceManager.getData(key: 'isFirstTime') ?? true;
+  bool isLoggedIn = PreferenceManager.getData(key: 'isLoggedIn') ?? false;
 
   setupServiceLocator();
-  runApp(const MoviesApp());
+
+  runApp(MoviesApp(isFirstTime: isFirstTime, isLoggedIn: isLoggedIn));
 }
 
 class MoviesApp extends StatelessWidget {
-  const MoviesApp({super.key});
+  final bool isFirstTime;
+  final bool isLoggedIn;
+
+  const MoviesApp({
+    super.key,
+    required this.isFirstTime,
+    required this.isLoggedIn,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +42,6 @@ class MoviesApp extends StatelessWidget {
         BlocProvider(
           create: (context) => getIt<WatchlistCubit>()..fetchWatchlist(),
         ),
-
         BlocProvider(create: (context) => HistoryCubit()),
       ],
 
@@ -47,7 +59,11 @@ class MoviesApp extends StatelessWidget {
 
                 locale: currentLocale,
 
-                initialRoute: RouteManager.homeScreen,
+                initialRoute: isFirstTime
+                    ? RouteManager.onboardingScreen
+                    : isLoggedIn
+                    ? RouteManager.homeScreen
+                    : RouteManager.loginScreen,
                 routes: RouteManager.routes,
               );
             },

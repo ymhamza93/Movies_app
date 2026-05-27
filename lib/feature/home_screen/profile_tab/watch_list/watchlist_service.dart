@@ -5,37 +5,28 @@ class WatchlistService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  // إضافة فيلم إلى قائمة الأمنيات (Sub-collection)
-  Future<void> addToWatchlist({required String movieId, required Map<String, dynamic> movieData}) async {
+  Future<void> addToWatchlist({
+    required String movieId,
+    required Map<String, dynamic> movieData,
+  }) async {
     try {
       final user = _firebaseAuth.currentUser;
 
-      // 🌟 سطر كشف حالة المستخدم
-      print("🎬 [WatchlistService] Current User UID: ${user?.uid}");
-
       if (user != null) {
-        print("⏳ [WatchlistService] Attempting to write to Firestore for Movie ID: $movieId");
-
         await _firestore
             .collection('users')
             .doc(user.uid)
             .collection('watchlist')
             .doc(movieId)
             .set(movieData);
-
-        print("✅ [WatchlistService] Successfully wrote to Firestore!");
       } else {
-        print("❌ [WatchlistService] Failed: User is NULL");
         throw Exception("User not logged in");
       }
     } catch (e) {
-      // 🌟 السطر ده هيطبع لكِ الخطأ الحقيقي في الـ Debug Console بالمللي
-      print("❌ [WatchlistService] Firestore Catch Error: ${e.toString()}");
       throw Exception("Failed to add to watchlist: ${e.toString()}");
     }
   }
 
-  // حذف فيلم من قائمة الأمنيات
   Future<void> removeFromWatchlist({required String movieId}) async {
     try {
       final user = _firebaseAuth.currentUser;
@@ -52,7 +43,6 @@ class WatchlistService {
     }
   }
 
-  // جلب جميع أفلام المفضلة للمستخدم الحالي
   Future<List<Map<String, dynamic>>> getWatchlist() async {
     try {
       final user = _firebaseAuth.currentUser;
@@ -71,7 +61,6 @@ class WatchlistService {
     }
   }
 
-  // فحص هل الفيلم مضاف مسبقاً للمفضلة أم لا (لتحديد شكل الأيقونة)
   Future<bool> isMovieInWatchlist(String movieId) async {
     try {
       final user = _firebaseAuth.currentUser;

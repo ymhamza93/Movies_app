@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
+import 'package:movies_app/core/utils/preference_manager.dart';
 import 'package:movies_app/core/utils/routes_manger.dart';
 import '../../core/utils/custom_button.dart';
 import 'onboarding_data.dart';
@@ -64,11 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(
-                left: 24.w,
-                right: 24.w,
-                bottom: 34.h,
-              ),
+              padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 34.h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -95,25 +92,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   SizedBox(height: 32.h),
                   CustomButton(
                     text: pages[_currentIndex].buttonText,
-                    onPressed: () {
+                    onPressed: () async {
                       if (_currentIndex < pages.length - 1) {
-                        _pageController.nextPage(
+                        await _pageController.nextPage(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.easeInOut,
                         );
-                      } else {
-                         Navigator.pushReplacementNamed(context, RouteManager.loginScreen);
+
+                        setState(() {
+                          _currentIndex++;
+                        });
+                      } else if (_currentIndex == pages.length - 1) {
+                        await PreferenceManager.saveData(
+                          key: 'isFirstTime',
+                          value: false,
+                        );
+
+                        if (context.mounted) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            RouteManager.loginScreen,
+                          );
+                        }
                       }
                     },
                   ),
-                  if (_currentIndex >=2) ...[
+                  if (_currentIndex >= 2) ...[
                     SizedBox(height: 12.h),
                     SizedBox(
                       width: double.infinity,
                       height: 55.h,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: ColorManager.yellow, width: 1.5),
+                          side: const BorderSide(
+                            color: ColorManager.yellow,
+                            width: 1.5,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.r),
                           ),

@@ -44,30 +44,18 @@ abstract class RouteManager {
     ),
     homeScreen: (context) => MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => getIt<AuthCubit>(),
-        ),
-        BlocProvider.value(
-          value: BlocProvider.of<WatchlistCubit>(context),
-        ),
-        BlocProvider.value(
-          value: BlocProvider.of<HistoryCubit>(context),
-        ),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
+        BlocProvider.value(value: BlocProvider.of<WatchlistCubit>(context)),
+        BlocProvider.value(value: BlocProvider.of<HistoryCubit>(context)),
       ],
       child: const HomeScreen(),
     ),
 
     profileScreen: (context) => MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => getIt<AuthCubit>(),
-        ),
-        BlocProvider.value(
-          value: BlocProvider.of<WatchlistCubit>(context),
-        ),
-        BlocProvider.value(
-          value: BlocProvider.of<HistoryCubit>(context),
-        ),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
+        BlocProvider.value(value: BlocProvider.of<WatchlistCubit>(context)),
+        BlocProvider.value(value: BlocProvider.of<HistoryCubit>(context)),
       ],
       child: const ProfileTab(),
     ),
@@ -81,7 +69,8 @@ abstract class RouteManager {
     },
 
     movieDetailsScreen: (context) {
-      final movieModel = ModalRoute.of(context)!.settings.arguments as MovieModel;
+      final movieModel =
+          ModalRoute.of(context)!.settings.arguments as MovieModel;
       return MovieDetailsScreen(movie: movieModel);
     },
   };

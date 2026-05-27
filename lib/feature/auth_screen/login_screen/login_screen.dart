@@ -7,6 +7,7 @@ import 'package:movies_app/core/utils/app_text_field.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
 import 'package:movies_app/core/utils/custom_button.dart';
 import 'package:movies_app/core/utils/language_animated_switch.dart';
+import 'package:movies_app/core/utils/preference_manager.dart';
 import 'package:movies_app/core/utils/routes_manger.dart';
 import 'package:movies_app/feature/auth_logic/auth_cubit.dart';
 import 'package:movies_app/feature/auth_logic/auth_state.dart';
@@ -152,13 +153,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20.h),
 
                   BlocConsumer<AuthCubit, AuthState>(
-                    listener: (context, state) {
+                    listener: (context, state) async {
                       if (state is AuthSuccess) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          RouteManager.homeScreen,
-                          (route) => false,
-                        );
+                        await PreferenceManager.saveData(key: 'isLoggedIn', value: true);
+
+                        if (context.mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            RouteManager.homeScreen,
+                                (route) => false,
+                          );
+                        }
                       }
                       if (state is AuthError) {
                         setState(() {
@@ -248,9 +253,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildAuthBlocConsumer() {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthSuccess) {
-          Navigator.pushReplacementNamed(context, RouteManager.homeScreen);
+          await PreferenceManager.saveData(key: 'isLoggedIn', value: true);
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              RouteManager.homeScreen,
+                  (route) => false,
+            );
+          }
         } else if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

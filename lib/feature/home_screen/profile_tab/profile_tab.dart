@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/core/utils/color_manager.dart';
 import 'package:movies_app/core/utils/custom_button.dart';
+import 'package:movies_app/core/utils/preference_manager.dart';
 import 'package:movies_app/core/utils/routes_manger.dart';
 import 'package:movies_app/feature/auth_logic/auth_cubit.dart';
 import 'package:movies_app/feature/auth_logic/auth_state.dart';
@@ -140,13 +141,20 @@ class _ProfileTabState extends State<ProfileTab> {
                                     size: 20,
                                   ),
                                   onPressed: () async {
-                                    await context.read<AuthCubit>().logout();
+
+                                    await PreferenceManager.saveData(key: 'isLoggedIn', value: false);
+
+
+                                    if (context.mounted) {
+                                      await context.read<AuthCubit>().logout();
+                                    }
+
 
                                     if (context.mounted) {
                                       Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         RouteManager.loginScreen,
-                                        (route) => false,
+                                            (route) => false,
                                       );
                                     }
                                   },
