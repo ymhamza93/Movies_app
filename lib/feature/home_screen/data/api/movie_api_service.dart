@@ -55,4 +55,18 @@ class MovieApiService {
 
     return moviesJson.map((movie) => MovieModel.fromJson(movie)).toList();
   }
+
+  static Future<List<MovieModel>> getMoviesByGenre(String genre) async {
+    Uri url = Uri.parse(
+      'https://movies-api.accel.li/api/v2/list_movies.json?genre=$genre',
+    );
+
+    var response = await http.get(url);
+
+    var json = jsonDecode(response.body);
+
+    List moviesJson = json['data']['movies'] ?? [];
+
+    return moviesJson.map((movie) => MovieModel.fromJson(movie)).toList();
+  }
 }

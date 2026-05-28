@@ -43,7 +43,6 @@ class MovieDetailsScreen extends StatelessWidget {
               child: Image.network(movie.image, fit: BoxFit.cover),
             ),
 
-
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
