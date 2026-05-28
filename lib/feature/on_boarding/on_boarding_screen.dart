@@ -32,10 +32,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: ColorManager.backgroundBlack,
       body: Stack(
         children: [
+          // الـ PageView المسؤول عن عرض الـ 6 خلفيات
           PageView.builder(
             controller: _pageController,
             itemCount: pages.length,
-            onPageChanged: (index) => setState(() => _currentIndex = index),
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index; // هنا الـ index بيتحدث طبيعي وسلس جداً مع الحركة
+              });
+            },
             itemBuilder: (context, index) {
               return Image.asset(
                 pages[index].image,
@@ -45,6 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               );
             },
           ),
+          // الـ Gradient السينمائي لتوضيح النصوص والأزرار
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -62,6 +68,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
+          // محتوى النصوص والأزرار في الأسفل
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -90,24 +97,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   SizedBox(height: 32.h),
+                  // زرار التحكم الأساسي (Explore Now / Next / Finish)
                   CustomButton(
                     text: pages[_currentIndex].buttonText,
                     onPressed: () async {
                       if (_currentIndex < pages.length - 1) {
-                        await _pageController.nextPage(
+                        _pageController.nextPage(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.easeInOut,
                         );
-
-                        setState(() {
-                          _currentIndex++;
-                        });
-                      } else if (_currentIndex == pages.length - 1) {
+                      } else {
+                        // عند الضغط على Finish في الصفحة السادسة والأخيرة
                         await PreferenceManager.saveData(
                           key: 'isFirstTime',
                           value: false,
                         );
-
                         if (context.mounted) {
                           Navigator.pushReplacementNamed(
                             context,
@@ -117,6 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       }
                     },
                   ),
+                  // هنا التعديل: زرار الـ Back يظهر فقط بدءاً من الصورة الثالثة (index 2) كما في التصميم تماماً
                   if (_currentIndex >= 2) ...[
                     SizedBox(height: 12.h),
                     SizedBox(
