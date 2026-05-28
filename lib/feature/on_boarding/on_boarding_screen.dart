@@ -32,13 +32,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: ColorManager.backgroundBlack,
       body: Stack(
         children: [
-          // الـ PageView المسؤول عن عرض الـ 6 خلفيات
+
           PageView.builder(
             controller: _pageController,
             itemCount: pages.length,
             onPageChanged: (index) {
               setState(() {
-                _currentIndex = index; // هنا الـ index بيتحدث طبيعي وسلس جداً مع الحركة
+                _currentIndex = index;
               });
             },
             itemBuilder: (context, index) {
@@ -50,7 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               );
             },
           ),
-          // الـ Gradient السينمائي لتوضيح النصوص والأزرار
+
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -68,7 +68,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          // محتوى النصوص والأزرار في الأسفل
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -97,7 +97,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   SizedBox(height: 32.h),
-                  // زرار التحكم الأساسي (Explore Now / Next / Finish)
+
                   CustomButton(
                     text: pages[_currentIndex].buttonText,
                     onPressed: () async {
@@ -107,7 +107,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        // عند الضغط على Finish في الصفحة السادسة والأخيرة
+
                         await PreferenceManager.saveData(
                           key: 'isFirstTime',
                           value: false,
@@ -121,7 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       }
                     },
                   ),
-                  // هنا التعديل: زرار الـ Back يظهر فقط بدءاً من الصورة الثالثة (index 2) كما في التصميم تماماً
+
                   if (_currentIndex >= 2) ...[
                     SizedBox(height: 12.h),
                     SizedBox(
